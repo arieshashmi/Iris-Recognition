@@ -1,0 +1,58 @@
+# import tensorflow as tf
+# from PIL import Image
+# import numpy as np
+
+# modelPath = "trained_model.h5"
+# model = tf.keras.models.load_model(modelPath)
+# image_path = "real_image/rehu/R/reha2.jpeg"
+
+# image = Image.open(image_path)
+# resized_im = image.resize((224, 224))
+# img = np.array(resized_im) / 255.0
+# img = np.expand_dims(img, axis=0)
+
+# labels = ["kainat", "asiya", "rehana", "tahira", "sakina", "hajira", "zehra"]
+
+# # Make predictions on the image
+# predictions = model.predict(img)
+# predicted_class = np.argmax(predictions[0])
+# confidence = predictions[0][predicted_class]
+
+# # Check if the confidence score is above a certain threshold
+# threshold = 0.5
+# if confidence > threshold:
+#     predicted_label = labels[predicted_class]
+#     print(f"Predicted class: {predicted_label}, Confidence: {confidence}")
+# else:
+#     print("The confidence score is below the threshold.")
+
+import tensorflow as tf
+from PIL import Image
+import numpy as np
+
+modelPath = "trained_model.h5"
+model = tf.keras.models.load_model(modelPath)
+image_path = 'real_image/tahu/L/ta1.jpeg'
+
+image = Image.open(image_path)
+resized_im = image.resize((224, 224))
+img = np.array(resized_im) / 255.0
+img = np.expand_dims(img, axis=0)
+
+labels = ["kainat", "asiya", "rehana", "tahira", "sakina", "hajira", "zehra"]
+
+# Make predictions on the image
+predictions = model.predict(img)
+sorted_indices = np.argsort(predictions[0])[::-1]  # Sort the predicted probabilities in descending order
+top_k = 1  # Consider the top k classes with the highest probabilities
+
+# Get the top k predicted classes and their probabilities
+top_classes = [labels[i] for i in sorted_indices[:top_k]]
+top_probabilities = [predictions[0][i] for i in sorted_indices[:top_k]]
+
+# Print the top predicted classes and their probabilities
+for i in range(top_k):
+    class_name = top_classes[i]
+    probability = top_probabilities[i]
+    print(f"Class: {class_name}, Probability: {probability}")
+
